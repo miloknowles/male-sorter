@@ -37,4 +37,5 @@ Link: https://linoxide.com/linux-how-to/connect-wifi-terminal-ubuntu-16-04/
 
 ### Installing Tesseract
 - Install C++ library here: https://github.com/tesseract-ocr/tesseract/wiki
+- Had to ```sudo apt update``` after adding to apt sources
 - Then ```sudo pip3  install pytesseract```
