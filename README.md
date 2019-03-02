@@ -17,6 +17,13 @@ sudo ifdown enx0014d1dad9a2
 sudo ifup enx0014d1dad9a2
 ```
 
+### Install packages with Pip
+```bash
+# Must use the same Python that Jupyter is running!
+# This was the only way I could get Jupyter to import properly...
+sudo pip3  install pytesseract
+```
+
 ### Networking
 ```
 User: xilinx
