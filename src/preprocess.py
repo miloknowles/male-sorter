@@ -119,7 +119,7 @@ def four_point_transform(image, pts):
   # return the warped image
   return warped
 
-def GetRoi(img):
+def BirdsEyeTransform(img):
   original_resolution = img.shape[1], img.shape[0] # Note: shape is rows, cols!
 
   # Downsampled resolution.
@@ -136,28 +136,39 @@ def GetRoi(img):
       corners.append(outline_scaled[i,:,:].reshape((2)))
   corners = np.array(corners)
 
-  cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
-  cv2.imshow('letter', img)
-  cv2.waitKey(0)
-
-  print(corners)
+  # cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
+  # cv2.imshow('letter', img)
+  # cv2.waitKey(0)
 
   # Make birds-eye image.
   pts_ordered = order_points(corners)
   topview = four_point_transform(img, pts_ordered)
 
+  return topview
+
+  # cv2.imshow('bev', img_downsampled)
+  # cv2.waitKey(0)
+
+def PreprocessImage(img):
+  tf = BirdsEyeTransform(img)
+
   # Make the image a more manageable size.
   crop_resolution = (480, 640)
-  img_downsampled = cv2.resize(topview, crop_resolution)
+  img_downsampled = cv2.resize(tf, crop_resolution)
 
-  cv2.imshow('bev', topview)
+  cv2.imshow('bev', img_downsampled)
   cv2.waitKey(0)
+
+  # Get the 4 crops we care about.
+
+  return tf
 
 # img = cv2.imread("/home/milo/Downloads/mail_640_480.png")
 # img = cv2.imread("/home/milo/Downloads/handwritten.png")
 img = cv2.imread('/home/milo/Downloads/example_mail.jpg')
 
-GetRoi(img)
+PreprocessImage(img)
+# GetRoi(img)
 
 # cnt = FindPageContour(img, resolution=(640, 480))
 # print(cnt)
