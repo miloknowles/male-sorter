@@ -21,7 +21,14 @@ sudo ifdown enx0014d1dad9a2
 sudo ifup enx0014d1dad9a2
 ```
 
-## Networking
+### Networking
 User: xilinx
 Password: xilinx
 Hostname: pynq
+
+### Connecting to WIFI
+sudo ifconfig wlan0
+sudo ifdown wlan0 # Turn of wlan0
+iwconfig wlan0 essid MIT # This is the only network I could get to work
+dhclient wlan0 # Didn't get any output
+ip addr
