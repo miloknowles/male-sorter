@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-def FindPageContour(img):
+def FindPageContour(img, resolution=(640, 480)):
   # Resize and convert to grayscale
-  img = cv2.resize(img, (640, 480))
+  img = cv2.resize(img, resolution)
   img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
   # Bilateral filter preserv edges
@@ -16,10 +16,16 @@ def FindPageContour(img):
   # Median filter clears small details
   img = cv2.medianBlur(img, 11)
 
+  # cv2.imshow('debug', img)
+  # cv2.waitKey(0)
+
   # Add black border in case that page is touching an image border
   img = cv2.copyMakeBorder(img, 5, 5, 5, 5, cv2.BORDER_CONSTANT, value=[0, 0, 0])
 
   edges = cv2.Canny(img, 200, 250)
+
+  # cv2.imshow('canny', edges)
+  # cv2.waitKey(0)
 
   # Getting contours  
   contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -55,11 +61,36 @@ def FindPageContour(img):
   # Result in pageConoutr (numpy array of 4 points):
   return pageContour
 
-img = cv2.imread("/home/milo/Downloads/mail_640_480.png")
+def GetRoi(img):
+  original_resolution = img.shape[1], img.shape[0] # Note: shape is rows, cols!
+  print('Original resolution:', original_resolution)
+
+  # Downsampled resolution.
+  resolution = (640, 480)
+  upsample_factor = original_resolution[0] / resolution[0]
+
+  print('Factor:', upsample_factor)
+
+  img_downsampled = cv2.resize(img, resolution)
+  outline = FindPageContour(img, resolution=resolution)
+
+  # Scale the outline back to original resolution.
+  # NOTE: must be integer coordinates to draw!
+  outline_scaled = (upsample_factor * outline).astype(np.int32)
+
+  cv2.drawContours(img, [outline_scaled], 0, (0, 0, 255), 2)
+  cv2.imshow('letter', img)
+  cv2.waitKey(0)
+
+# img = cv2.imread("/home/milo/Downloads/mail_640_480.png")
 # img = cv2.imread("/home/milo/Downloads/handwritten.png")
+img = cv2.imread('/home/milo/Downloads/example_mail.jpg')
 
-cnt = FindPageContour(img)
-cv2.drawContours(img, [cnt], 0, (0,0,255), 2)
+GetRoi(img)
 
-cv2.imshow('Letter', img)
-cv2.waitKey(0)
+# cnt = FindPageContour(img, resolution=(640, 480))
+# print(cnt)
+# cv2.drawContours(img, [4*cnt], 0, (0,0,255), 2)
+
+# cv2.imshow('Letter', img)
+# cv2.waitKey(0)
