@@ -34,3 +34,7 @@ sudo dhclient wlan0 # Didn't get any output
 ```
 
 Link: https://linoxide.com/linux-how-to/connect-wifi-terminal-ubuntu-16-04/
+
+### Installing Tesseract
+- Install C++ library here: https://github.com/tesseract-ocr/tesseract/wiki
+- Then ```sudo pip3  install pytesseract```
