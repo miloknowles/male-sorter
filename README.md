@@ -27,8 +27,12 @@ Password: xilinx
 Hostname: pynq
 
 ### Connecting to WIFI
+```bash
 sudo ifconfig wlan0
 sudo ifdown wlan0 # Turn of wlan0
 iwconfig wlan0 essid MIT # This is the only network I could get to work
 dhclient wlan0 # Didn't get any output
 ip addr
+```
+
+Link: https://linoxide.com/linux-how-to/connect-wifi-terminal-ubuntu-16-04/
