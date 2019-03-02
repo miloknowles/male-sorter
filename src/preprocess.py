@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 def FindPageContour(img, resolution):
   # Resize and convert to grayscale
   img = cv2.resize(img, resolution)
+
+  cv2.imshow('contour', img)
+  cv2.waitKey(0)
+
   img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
   # Bilateral filter preserv edges
@@ -77,6 +81,8 @@ def order_points(pts):
   diff = np.diff(pts, axis = 1)
   rect[1] = pts[np.argmin(diff)]
   rect[3] = pts[np.argmax(diff)]
+
+  print('Rect:', rect)
  
   # return the ordered coordinates
   return rect
@@ -119,53 +125,62 @@ def four_point_transform(image, pts):
   # return the warped image
   return warped
 
-def BirdsEyeTransform(img):
-  original_resolution = img.shape[1], img.shape[0] # Note: shape is rows, cols!
-
-  # Downsampled resolution.
-  contour_resolution = (480, 640)
-  outline = FindPageContour(img, resolution=contour_resolution)
-
+def BirdsEyeTransform(img, outline_scaled):
   # Scale the outline back to original resolution.
   # NOTE: must be integer coordinates to draw!
-  upsample_factor = original_resolution[0] / contour_resolution[0]
-  outline_scaled = (upsample_factor * outline).astype(np.int32)
 
+  # Convert corners to usable format.
   corners = []
   for i in range(outline_scaled.shape[0]):
-      corners.append(outline_scaled[i,:,:].reshape((2)))
+    # x = outline_scaled[i, 0]
+    # y = outline_scaled[i, 1]
+    corners.append(outline_scaled[i,:].reshape((2)))
+    # corners.append([y, x])
   corners = np.array(corners)
 
-  # cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
-  # cv2.imshow('letter', img)
-  # cv2.waitKey(0)
+  cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
+  cv2.imshow('letter', img)
+  cv2.waitKey(0)
 
   # Make birds-eye image.
-  pts_ordered = order_points(corners)
-  topview = four_point_transform(img, pts_ordered)
+  topview = four_point_transform(img, corners)
 
   return topview
 
-  # cv2.imshow('bev', img_downsampled)
-  # cv2.waitKey(0)
-
 def PreprocessImage(img):
-  tf = BirdsEyeTransform(img)
+  # Get corners from the image, and scale them up to the original resolution.
+
+  contour_resolution = (640, 480) # Should be cols x rows.
+  original_resolution = img.shape[1], img.shape[0] # Cols x rows.
+  upsample_factor = original_resolution[0] / contour_resolution[0]
+
+  # Find the outline of the letter at contour_resolution.
+  # Outline points are in (x, y) format which are the width and height dimensions.
+  outline = FindPageContour(img, contour_resolution)
+  outline_scaled = (upsample_factor * outline).astype(np.int32)
+
+  print('Contour res:', contour_resolution)
+  print('Original res:', original_resolution)
+  print('Upsample:', upsample_factor)
+  print('Outline scaled:', outline_scaled)
+
+  tf = BirdsEyeTransform(img, outline_scaled)
 
   # Make the image a more manageable size.
-  crop_resolution = (480, 640)
+  crop_resolution = (640, 480) # Cols x rows.
   img_downsampled = cv2.resize(tf, crop_resolution)
 
   cv2.imshow('bev', img_downsampled)
   cv2.waitKey(0)
 
   # Get the 4 crops we care about.
+  crops = []
 
   return tf
 
 # img = cv2.imread("/home/milo/Downloads/mail_640_480.png")
 # img = cv2.imread("/home/milo/Downloads/handwritten.png")
-img = cv2.imread('/home/milo/Downloads/example_mail.jpg')
+img = cv2.imread('/home/milo/Downloads/example_mail.png')
 
 PreprocessImage(img)
 # GetRoi(img)
