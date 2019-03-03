@@ -16,23 +16,25 @@ def Test():
     cv2.imshow('roi', r)
     cv2.waitKey(0)
 
-if __name__ == '__main__':
-  cm = CameraManager(0)
+# if __name__ == '__main__':
+#   cm = CameraManager(0)
 
-  img = cm.Capture()
+#   img = cm.Capture()
 
-  all_text = []
-  roi = PreprocessImage(img)
+#   all_text = []
+#   roi = PreprocessImage(img)
   
-  for r in roi:
-    text = DetectText(r)
-    print(text)
+#   for r in roi:
+#     text = DetectText(r)
+#     print(text)
 
-    all_text.append(text)
+#     all_text.append(text)
     
-    cv2.imshow('roi', r)
-    cv2.waitKey(0)
+#     cv2.imshow('roi', r)
+#     cv2.waitKey(0)
 
-  print(all_text)
+#   print(all_text)
 
-  cm.Shutdown()
+#   cm.Shutdown()
+
+Test()

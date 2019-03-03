@@ -165,6 +165,9 @@ def PreprocessImage(img):
   # Bilateral filter preserv edges
   img_clean = cv2.bilateralFilter(img_clean, 9, 75, 1)
 
+  blurred = cv2.GaussianBlur(img_clean, (5, 5), 0);
+  img_clean = cv2.addWeighted(img_clean, 4.0, blurred, -3.0, 0);
+
   # cv2.imshow('warped', img_downsampled)
   # cv2.waitKey(0)
 
