@@ -25,8 +25,8 @@ def FindPageContour(img, resolution):
 
   edges = cv2.Canny(img, 200, 250)
 
-  cv2.imshow('canny', edges)
-  cv2.waitKey(0)
+  # cv2.imshow('canny', edges)
+  # cv2.waitKey(0)
 
   # Getting contours  
   contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
