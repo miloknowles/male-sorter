@@ -6,6 +6,8 @@ from camera_manager import *
 
 def Test():
   img = cv2.imread('/home/milo/Downloads/example_mail.png')
+  # img = cv2.imread('/home/milo/Downloads/handwritten.png')
+  # img = cv2.imread('/home/milo/Downloads/better.jpg')
 
   roi = PreprocessImage(img)
 

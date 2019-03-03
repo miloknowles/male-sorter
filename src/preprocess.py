@@ -21,12 +21,12 @@ def FindPageContour(img, resolution):
   img = cv2.medianBlur(img, 11)
 
   # Add black border in case that page is touching an image border
-  img = cv2.copyMakeBorder(img, 5, 5, 5, 5, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+  # img = cv2.copyMakeBorder(img, 5, 5, 5, 5, cv2.BORDER_CONSTANT, value=[0, 0, 0])
 
   edges = cv2.Canny(img, 200, 250)
 
-  # cv2.imshow('canny', edges)
-  # cv2.waitKey(0)
+  cv2.imshow('canny', edges)
+  cv2.waitKey(0)
 
   # Getting contours  
   contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -39,7 +39,7 @@ def FindPageContour(img, resolution):
   MAX_COUNTOUR_AREA = (width - 10) * (height - 10)
 
   # Page fill at least half of image, then saving max area found
-  maxAreaFound = MAX_COUNTOUR_AREA * 0.5
+  maxAreaFound = MAX_COUNTOUR_AREA * 0.1
 
   # Saving page contour
   pageContour = np.array([[5, 5], [5, height-5], [width-5, height-5], [width-5, 5]])
@@ -133,9 +133,9 @@ def BirdsEyeTransform(img, outline_scaled):
     corners.append(outline_scaled[i,:].reshape((2)))
   corners = np.array(corners)
 
-  # cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
-  # cv2.imshow('contours', img)
-  # cv2.waitKey(0)
+  cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
+  cv2.imshow('contours', img)
+  cv2.waitKey(0)
 
   # Make birds-eye image.
   topview = four_point_transform(img, corners)
@@ -145,7 +145,7 @@ def BirdsEyeTransform(img, outline_scaled):
 def PreprocessImage(img):
   # Get corners from the image, and scale them up to the original resolution.
   # NOTE: INPUT IMAGE MUST BE WIDER THAN IT IS TALL (640:480) RATIO!!!!
-  contour_resolution = (640, 480) # Should be cols x rows.
+  contour_resolution = (1280, 960) # Should be cols x rows.
   original_resolution = img.shape[1], img.shape[0] # Cols x rows.
   upsample_factor = original_resolution[0] / contour_resolution[0]
 
@@ -168,8 +168,8 @@ def PreprocessImage(img):
   blurred = cv2.GaussianBlur(img_clean, (5, 5), 0);
   img_clean = cv2.addWeighted(img_clean, 4.0, blurred, -3.0, 0);
 
-  # cv2.imshow('warped', img_downsampled)
-  # cv2.waitKey(0)
+  cv2.imshow('warped', img_downsampled)
+  cv2.waitKey(0)
 
   # Get the 4 crops we care about.
   crops = []
