@@ -16,6 +16,7 @@ static int DROP_CLOSED = 90;
 static int DROP_SPEED = 100;
 int drop_pos = 0;
 int drop_target_pos = DROP_CLOSED;
+bool dropped = false;
 
 #define FLIP_PIN 10
 static int FLIP_NORMAL = 60;
@@ -25,7 +26,7 @@ int flip_pos = 0;
 int flip_target_pos = FLIP_NORMAL;
 bool flip = false;
 
-bool runProgram = false;
+bool runProgram = true;
 
 
 void setup() {
@@ -34,7 +35,6 @@ void setup() {
    
   drop_motor.attach(CLOSER_PIN);  // attaches the servo on pin 9 to the servo object
   flip_motor.attach(FLIP_PIN);
-
   move_mail();
   move_flip();
   
@@ -42,10 +42,11 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Program Started. Use 'o' to open, 'c' to close, 'f' to flip, 'q' to quit, 'r' to restart");
+  Serial.println("Program Started. Use 'd' to drop, 'o' to open, 'c' to close, 'f' to flip, 'q' to quit, 'r' to restart");
   while (runProgram) {
     handleSerial();
-    move_mail();
+    drop_mail();
+//    move_mail();
     move_flip();
     delay(15);
   }
@@ -69,6 +70,11 @@ void handleSerial(){
         Serial.println("Closing Drop");
         drop_target_pos = DROP_CLOSED;
       break;
+
+      case 'd':
+        Serial.println("Dropping");
+        dropped = false;
+       break;
 
       case 'f': //flip
         Serial.println("Flipping");
@@ -98,6 +104,21 @@ void handleSerial(){
 
 void move_mail(){
   drop_motor.slowmove(drop_target_pos, DROP_SPEED);
+}
+
+void drop_mail(){
+//  drop_motor.slowmove(DROP_OPEN, DROP_SPEED);
+
+  if (!dropped && drop_motor.read() > DROP_OPEN){
+    drop_motor.slowmove(DROP_OPEN, DROP_SPEED);
+  }
+  else if (!dropped && drop_motor.read() <= DROP_OPEN){
+    delay(1000);
+    dropped = true;
+  }
+  else{
+    drop_motor.slowmove(DROP_CLOSED, DROP_SPEED);
+  }
 }
 
 void move_flip(){
