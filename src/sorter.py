@@ -1,14 +1,13 @@
 import serial
 import time
 
-def drop_mail():
+def drop_mail(ser):
     ser.write('d'.encode('utf-8'))
     time.sleep(1)
 
-def flip_mail():
+def flip_mail(ser):
     ser.write('f'.encode('utf-8'))
     time.sleep(0.5)
-
 
 if __name__ == "__main__":
     COM = '/dev/ttyACM0'

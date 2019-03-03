@@ -5,6 +5,7 @@ from ocr import *
 from camera_manager import *
 from text_matching import *
 from send_email import *
+from sorter import *
 
 EMAIL_BODY = """\
   Your mail was just dropped off! Come pick it up when you get a chance."""
@@ -29,6 +30,12 @@ def Main():
   cv2.namedWindow('stream', cv2.WINDOW_NORMAL)
   cv2.namedWindow('crops', cv2.WINDOW_NORMAL)
   cv2.namedWindow('debug', cv2.WINDOW_NORMAL)
+
+  COM = '/dev/ttyACM0'
+  baudRate = 9600
+  
+  ser = serial.Serial(COM, baudRate)
+  time.sleep(5)
 
   #============== TRIGGER ==============#
   def Trigger():
@@ -71,7 +78,10 @@ def Main():
       # email = DATABASE[match_name]
       email = "milokhl@gmail.com"
       print('Match found! Sending %s an email.' % (email))
-      SendEmail(email, EMAIL_BODY)    
+      SendEmail(email, EMAIL_BODY)  
+
+    flip_mail(ser)
+    drop_mail(ser)
 
   #=========== MAIN LOOP ============#
   while(True):
@@ -90,6 +100,7 @@ def Main():
 
   cm.Shutdown()
   cv2.destroyAllWindows()
+  ser.close()
 
 if __name__ == '__main__':
   Main()
