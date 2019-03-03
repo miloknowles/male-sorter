@@ -160,26 +160,31 @@ def PreprocessImage(img):
   crop_resolution = (1280, 960) # Cols x rows.
   img_downsampled = cv2.resize(tf, crop_resolution)
 
-  cv2.imshow('warped', img_downsampled)
-  cv2.waitKey(0)
+  img_clean = cv2.cvtColor(img_downsampled, cv2.COLOR_BGR2GRAY)
+
+  # Bilateral filter preserv edges
+  img_clean = cv2.bilateralFilter(img_clean, 9, 75, 1)
+
+  # cv2.imshow('warped', img_downsampled)
+  # cv2.waitKey(0)
 
   # Get the 4 crops we care about.
   crops = []
 
-  width = img_downsampled.shape[1]
-  height = img_downsampled.shape[0]
+  width = img_clean.shape[1]
+  height = img_clean.shape[0]
 
   crop_w = int(0.5 * width)
   crop_h = int(0.5 * height)
 
-  tl = img_downsampled[0:crop_h, 0:crop_w]
-  tr = img_downsampled[0:crop_h, width-crop_w:width-1]
-  bl = img_downsampled[height-crop_h : height-1, 0:crop_w]
-  br = img_downsampled[height-crop_h : height-1, width-crop_w:width-1]
+  tl = img_clean[0:crop_h, 0:crop_w]
+  tr = img_clean[0:crop_h, width-crop_w:width-1]
+  bl = img_clean[height-crop_h : height-1, 0:crop_w]
+  br = img_clean[height-crop_h : height-1, width-crop_w:width-1]
 
   mx = int(width / 2)
   my = int(height / 2)
-  mid = img_downsampled[my-int(crop_h/2):my+int(crop_h/2), mx-int(crop_w/2):mx+int(crop_w/2)]
+  mid = img_clean[my-int(crop_h/2):my+int(crop_h/2), mx-int(crop_w/2):mx+int(crop_w/2)]
 
   return (tl, tr, bl, br, mid)
 
