@@ -20,7 +20,6 @@ def TestStatic():
 
 if __name__ == '__main__':
   cm = CameraManager(1)
-  # cm.Stream()
 
   img = cm.Capture()
 
