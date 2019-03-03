@@ -29,7 +29,7 @@ def Main():
   #============== SETUP ===============#
   cm = CameraManager(1)
   cv2.namedWindow('stream', cv2.WINDOW_NORMAL)
-  cv2.namedWindow('crops', cv2.WINDOW_NORMAL)
+  # cv2.namedWindow('crops', cv2.WINDOW_NORMAL)
   cv2.namedWindow('debug', cv2.WINDOW_NORMAL)
 
   COM = '/dev/ttyACM0'
@@ -71,7 +71,7 @@ def Main():
     joined_text = ' '.join(all_text)
     joined_text.replace('\t', '')
     match_score, match_name = best_matches(joined_text, FULL_NAMES, 0.9)
-    print('========== DATABASE MATCHING ==========')
+    print('\n========== DATABASE MATCHING ==========')
     print('Name: %s Score: %s' % (str(match_name), str(match_score)))
 
     # Send email if match_scorech found.
@@ -83,7 +83,7 @@ def Main():
     body = 'Hi %s,\n %s' % (match_name, EMAIL_BODY)
     SendEmail(email, body)  
 
-    cv2.waitKey(0)
+    # cv2.waitKey(0)
     flip_mail(ser)
     time.sleep(2)
     drop_mail(ser)

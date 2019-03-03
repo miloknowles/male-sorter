@@ -26,8 +26,8 @@ def FindPageContour(img, resolution):
   edges = cv2.Canny(img, 200, 250)
   # edges = cv2.Canny(img, 100, 200)
 
-  cv2.imshow('debug', edges)
-  cv2.waitKey(0)
+  # cv2.imshow('debug', edges)
+  # cv2.waitKey(0)
 
   # Getting contours  
   contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -136,9 +136,9 @@ def BirdsEyeTransform(img, outline_scaled):
     corners.append(outline_scaled[i,:].reshape((2)))
   corners = np.array(corners)
 
-  cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
-  cv2.imshow('debug', img)
-  cv2.waitKey(0)
+  # cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
+  # cv2.imshow('debug', img)
+  # cv2.waitKey(0)
 
   # Make birds-eye image.
   topview = four_point_transform(img, corners)
