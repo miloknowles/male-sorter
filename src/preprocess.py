@@ -6,8 +6,8 @@ def FindPageContour(img, resolution):
   # Resize and convert to grayscale
   img = cv2.resize(img, resolution)
 
-  cv2.imshow('contour', img)
-  cv2.waitKey(0)
+  # cv2.imshow('contour', img)
+  # cv2.waitKey(0)
 
   img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -81,8 +81,6 @@ def order_points(pts):
   diff = np.diff(pts, axis = 1)
   rect[1] = pts[np.argmin(diff)]
   rect[3] = pts[np.argmax(diff)]
-
-  print('Rect:', rect)
  
   # return the ordered coordinates
   return rect
@@ -132,15 +130,12 @@ def BirdsEyeTransform(img, outline_scaled):
   # Convert corners to usable format.
   corners = []
   for i in range(outline_scaled.shape[0]):
-    # x = outline_scaled[i, 0]
-    # y = outline_scaled[i, 1]
     corners.append(outline_scaled[i,:].reshape((2)))
-    # corners.append([y, x])
   corners = np.array(corners)
 
-  cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
-  cv2.imshow('letter', img)
-  cv2.waitKey(0)
+  # cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
+  # cv2.imshow('contours', img)
+  # cv2.waitKey(0)
 
   # Make birds-eye image.
   topview = four_point_transform(img, corners)
@@ -149,7 +144,7 @@ def BirdsEyeTransform(img, outline_scaled):
 
 def PreprocessImage(img):
   # Get corners from the image, and scale them up to the original resolution.
-
+  # NOTE: INPUT IMAGE MUST BE WIDER THAN IT IS TALL (640:480) RATIO!!!!
   contour_resolution = (640, 480) # Should be cols x rows.
   original_resolution = img.shape[1], img.shape[0] # Cols x rows.
   upsample_factor = original_resolution[0] / contour_resolution[0]
@@ -159,30 +154,45 @@ def PreprocessImage(img):
   outline = FindPageContour(img, contour_resolution)
   outline_scaled = (upsample_factor * outline).astype(np.int32)
 
-  print('Contour res:', contour_resolution)
-  print('Original res:', original_resolution)
-  print('Upsample:', upsample_factor)
-  print('Outline scaled:', outline_scaled)
-
   tf = BirdsEyeTransform(img, outline_scaled)
 
   # Make the image a more manageable size.
   crop_resolution = (640, 480) # Cols x rows.
   img_downsampled = cv2.resize(tf, crop_resolution)
 
-  cv2.imshow('bev', img_downsampled)
+  cv2.imshow('warped', img_downsampled)
   cv2.waitKey(0)
 
   # Get the 4 crops we care about.
   crops = []
 
-  return tf
+  width = img_downsampled.shape[1]
+  height = img_downsampled.shape[0]
+
+  crop_w = int(0.5 * width)
+  crop_h = int(0.5 * height)
+
+  tl = img_downsampled[0:crop_h, 0:crop_w]
+  tr = img_downsampled[0:crop_h, width-crop_w:width-1]
+  bl = img_downsampled[height-crop_h : height-1, 0:crop_w]
+  br = img_downsampled[height-crop_h : height-1, width-crop_w:width-1]
+
+  mx = int(width / 2)
+  my = int(height / 2)
+  mid = img_downsampled[my-int(crop_h/2):my+int(crop_h/2), mx-int(crop_w/2):mx+int(crop_w/2)]
+
+  return (tl, tr, bl, br, mid)
 
 # img = cv2.imread("/home/milo/Downloads/mail_640_480.png")
 # img = cv2.imread("/home/milo/Downloads/handwritten.png")
 img = cv2.imread('/home/milo/Downloads/example_mail.png')
 
-PreprocessImage(img)
+roi = PreprocessImage(img)
+
+for r in roi:
+  cv2.imshow('roi', r)
+  cv2.waitKey(0)
+
 # GetRoi(img)
 
 # cnt = FindPageContour(img, resolution=(640, 480))
