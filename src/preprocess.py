@@ -45,6 +45,8 @@ def FindPageContour(img, resolution):
   # Saving page contour
   pageContour = np.array([[5, 5], [5, height-5], [width-5, height-5], [width-5, 5]])
 
+  print('Num contours:', len(contours))
+
   # Go through all contours
   for cnt in contours:
     # Simplify contour
@@ -55,7 +57,7 @@ def FindPageContour(img, resolution):
     # Page area must be bigger than maxAreaFound 
     if (len(approx) == 4 and
         cv2.isContourConvex(approx) and
-        maxAreaFound < cv2.contourArea(approx) < MAX_COUNTOUR_AREA):
+        maxAreaFound < cv2.contourArea(approx) < 0.9*MAX_COUNTOUR_AREA):
 
       maxAreaFound = cv2.contourArea(approx)
       pageContour = approx
