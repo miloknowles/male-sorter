@@ -134,8 +134,8 @@ def BirdsEyeTransform(img, outline_scaled):
   corners = np.array(corners)
 
   cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
-  cv2.imshow('contours', img)
-  cv2.waitKey(0)
+  cv2.imshow('debug', img)
+  # cv2.waitKey(0)
 
   # Make birds-eye image.
   topview = four_point_transform(img, corners)
@@ -168,8 +168,8 @@ def PreprocessImage(img):
   blurred = cv2.GaussianBlur(img_clean, (5, 5), 0);
   img_clean = cv2.addWeighted(img_clean, 4.0, blurred, -3.0, 0);
 
-  cv2.imshow('warped', img_downsampled)
-  cv2.waitKey(0)
+  cv2.imshow('debug', img_downsampled)
+  # cv2.waitKey(0)
 
   # Get the 4 crops we care about.
   crops = []

@@ -31,8 +31,8 @@ class CameraManager(object):
     return frame
 
   def Capture(self):
-    for i in range(4):
-      self.cap.grab()
+    # for i in range(4):
+      # self.cap.grab()
     ret, frame = self.cap.read()
     return frame
 
