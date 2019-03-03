@@ -21,12 +21,13 @@ def FindPageContour(img, resolution):
   img = cv2.medianBlur(img, 11)
 
   # Add black border in case that page is touching an image border
-  # img = cv2.copyMakeBorder(img, 5, 5, 5, 5, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+  img = cv2.copyMakeBorder(img, 5, 5, 5, 5, cv2.BORDER_CONSTANT, value=[0, 0, 0])
 
   edges = cv2.Canny(img, 200, 250)
+  # edges = cv2.Canny(img, 100, 200)
 
-  # cv2.imshow('canny', edges)
-  # cv2.waitKey(0)
+  cv2.imshow('debug', edges)
+  cv2.waitKey(0)
 
   # Getting contours  
   contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -135,7 +136,7 @@ def BirdsEyeTransform(img, outline_scaled):
 
   cv2.drawContours(img, [corners], 0, (0, 0, 255), 2)
   cv2.imshow('debug', img)
-  # cv2.waitKey(0)
+  cv2.waitKey(0)
 
   # Make birds-eye image.
   topview = four_point_transform(img, corners)
@@ -145,7 +146,9 @@ def BirdsEyeTransform(img, outline_scaled):
 def PreprocessImage(img):
   # Get corners from the image, and scale them up to the original resolution.
   # NOTE: INPUT IMAGE MUST BE WIDER THAN IT IS TALL (640:480) RATIO!!!!
-  contour_resolution = (1280, 960) # Should be cols x rows.
+  # contour_resolution = (1280, 960) # Should be cols x rows.
+  # contour_resolution = (1920, 1080)
+  contour_resolution = (640, 360)
   original_resolution = img.shape[1], img.shape[0] # Cols x rows.
   upsample_factor = original_resolution[0] / contour_resolution[0]
 
@@ -157,7 +160,7 @@ def PreprocessImage(img):
   tf = BirdsEyeTransform(img, outline_scaled)
 
   # Make the image a more manageable size.
-  crop_resolution = (1280, 960) # Cols x rows.
+  crop_resolution = (1920, 1080) # Cols x rows.
   img_downsampled = cv2.resize(tf, crop_resolution)
 
   img_clean = cv2.cvtColor(img_downsampled, cv2.COLOR_BGR2GRAY)

@@ -17,8 +17,7 @@ class CameraManager(object):
 
     # Set the focus distance (multiples of 5).
     # Larger numbers focus on things closer up.
-    # Was 30 before
-    self.cap.set(28, 20)
+    self.cap.set(28, 10)
 
   def CaptureOcam(self):
     self.cap.release()
