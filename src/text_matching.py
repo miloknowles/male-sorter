@@ -32,7 +32,7 @@ def best_matches(mail_string, db, thresh=0.25):
     if sorted_dist_matches[-1][0] < thresh:
         return sorted_dist_matches[-1]
     else:
-        return None
+        return None, None
 
 
 if __name__ == "__main__":

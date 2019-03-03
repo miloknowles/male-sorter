@@ -9,6 +9,20 @@ from send_email import *
 EMAIL_BODY = """\
   Your mail was just dropped off! Come pick it up when you get a chance."""
 
+DATABASE = {
+  "Victor Pontis":"iperper@mit.edu",
+  "Christopher Puchi": "iperper@mit.edu",
+  "Enes Gotkas": "iperper@mit.edu",
+  "Arash Kani":"iperper@mit.edu",
+  "Diana Martin": "iperper@mit.edu",
+  "Rob Wheeler": "iperper@mit.edu",
+  "Jacob Jurewicz": "iperper@mit.edu" ,
+  "Mark Halsey": "iperper@mit.edu",
+  "Lizi Yuan": "iperper@mit.edu"
+}
+
+FULL_NAMES = list(DATABASE.keys())
+
 def Main():
   #============== SETUP ===============#
   cm = CameraManager(1)
@@ -46,12 +60,17 @@ def Main():
     # cv2.waitKey(0)
 
     ## DO THE TEXT MATCHING HERE
-    found_match = False
+    joined_text = ' '.join(all_text)
+    joined_text.replace('\t', '')
+    match_score, match_name = best_matches(joined_text, FULL_NAMES, 0.30)
+    print('========== DATABASE MATCHING ==========')
+    print('Name: %s Score: %s' % (str(match_name), str(match_score)))
 
     # Send email if match found.
-    if found_match:
-      print('Match found! Sending them an email.')
-      email = 'milokhl@gmail.com'
+    if match_score is not None:
+      # email = DATABASE[match_name]
+      email = "milokhl@gmail.com"
+      print('Match found! Sending %s an email.' % (email))
       SendEmail(email, EMAIL_BODY)    
 
   #=========== MAIN LOOP ============#
