@@ -11,8 +11,8 @@ char receivedChars[numChars];
 boolean newData = false;
 
 #define CLOSER_PIN 9
-static int DROP_OPEN = 10;
-static int DROP_CLOSED = 90;
+static int DROP_OPEN = 90;
+static int DROP_CLOSED = 140;
 static int DROP_SPEED = 100;
 int drop_pos = 0;
 int drop_target_pos = DROP_CLOSED;
