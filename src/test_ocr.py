@@ -17,3 +17,5 @@ def TestStatic():
     
     cv2.imshow('roi', r)
     cv2.waitKey(0)
+
+TestStatic()
