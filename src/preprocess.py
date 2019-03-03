@@ -157,7 +157,7 @@ def PreprocessImage(img):
   tf = BirdsEyeTransform(img, outline_scaled)
 
   # Make the image a more manageable size.
-  crop_resolution = (640, 480) # Cols x rows.
+  crop_resolution = (1280, 960) # Cols x rows.
   img_downsampled = cv2.resize(tf, crop_resolution)
 
   cv2.imshow('warped', img_downsampled)
@@ -183,21 +183,24 @@ def PreprocessImage(img):
 
   return (tl, tr, bl, br, mid)
 
-# img = cv2.imread("/home/milo/Downloads/mail_640_480.png")
-# img = cv2.imread("/home/milo/Downloads/handwritten.png")
-img = cv2.imread('/home/milo/Downloads/example_mail.png')
+if __name__ == '__main__':
+  
+  # img = cv2.imread("/home/milo/Downloads/mail_640_480.png")
+  # img = cv2.imread("/home/milo/Downloads/handwritten.png")
+  # img = cv2.imread('/home/milo/Downloads/example_mail.png')
 
-roi = PreprocessImage(img)
+  # roi = PreprocessImage(img)
 
-for r in roi:
-  cv2.imshow('roi', r)
-  cv2.waitKey(0)
+  # for r in roi:
+  #   cv2.imshow('roi', r)
+  #   cv2.waitKey(0)
 
-# GetRoi(img)
+  # GetRoi(img)
 
-# cnt = FindPageContour(img, resolution=(640, 480))
-# print(cnt)
-# cv2.drawContours(img, [4*cnt], 0, (0,0,255), 2)
+  # cnt = FindPageContour(img, resolution=(640, 480))
+  # print(cnt)
+  # cv2.drawContours(img, [4*cnt], 0, (0,0,255), 2)
 
-# cv2.imshow('Letter', img)
-# cv2.waitKey(0)
+  # cv2.imshow('Letter', img)
+  # cv2.waitKey(0)
+  pass
