@@ -78,9 +78,12 @@ def Main():
     # if match_score is not None:
       # email = DATABASE[match_name]
     email = "milokhl@gmail.com"
+    # email = "iperper@mit.edu"
     print('Match found! Sending %s an email.' % (email))
-    SendEmail(email, EMAIL_BODY)  
+    body = 'Hi %s,\n %s' % (match_name, EMAIL_BODY)
+    SendEmail(email, body)  
 
+    cv2.waitKey(0)
     flip_mail(ser)
     time.sleep(2)
     drop_mail(ser)

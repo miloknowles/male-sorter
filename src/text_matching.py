@@ -5,7 +5,7 @@ from itertools import permutations
 def best_matches(mail_string, db, thresh=0.25):
     words = mail_string.replace('\n', ' ').replace("  ",' ').lower().split(" ")
 
-    print(words)
+    # print(words)
 
     dist_matches = []
     ratio_matches = []
@@ -35,7 +35,7 @@ def best_matches(mail_string, db, thresh=0.25):
     #sorted_ratio_matches = sorted(ratio_matches, key= lambda x: x[0])
 
     # print(sorted_dist_matches[-3:])
-    print(sorted_dist_matches)
+    # print(sorted_dist_matches)
 
     if sorted_dist_matches[-1][0] < thresh:
         return sorted_dist_matches[-1]
